@@ -6,7 +6,6 @@ import { Input } from "../components/ui/Input";
 import { Wand2 } from "lucide-react";
 import { playStartSound } from "../utils/audio";
 import { supabase } from "../lib/supabase";
-import HuoImg from "../assets/Huo.png";
 
 export default function Home() {
   const [email, setEmail] = useState("");
@@ -71,8 +70,9 @@ export default function Home() {
         <div className="flex flex-col items-center justify-center space-y-4">
           <div className="flex items-center justify-center">
             <img 
-              src={HuoImg} 
+              src="/Huo.png" 
               alt="Huo" 
+              referrerPolicy="no-referrer"
               className="w-full max-w-[300px] h-auto object-contain drop-shadow-[0_0_40px_rgba(255,109,0,0.4)]" 
             />
           </div>
