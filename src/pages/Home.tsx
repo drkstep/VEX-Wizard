@@ -5,6 +5,8 @@ import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import { Wand2 } from "lucide-react";
 import { playStartSound } from "../utils/audio";
+import { supabase } from "../lib/supabase";
+import HuoImg from "../assets/Huo.png";
 
 export default function Home() {
   const [email, setEmail] = useState("");
@@ -25,25 +27,33 @@ export default function Home() {
     if (email && name) {
       setIsLoading(true);
       try {
-        const res = await fetch("/api/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, name }),
-        });
-        
-        const data = await res.json();
-        
-        if (!res.ok) {
-          setError(data.error || "Error al iniciar sesión");
-          return;
+        const { data: existingUser, error: fetchError } = await supabase
+          .from('users')
+          .select('*')
+          .eq('email', email)
+          .single();
+
+        let isNewUser = false;
+
+        if (!existingUser) {
+          isNewUser = true;
+          const { error: insertError } = await supabase
+            .from('users')
+            .insert([{ email, name }]);
+            
+          if (insertError) {
+            setError("Error al crear usuario en la base de datos.");
+            setIsLoading(false);
+            return;
+          }
         }
 
         playStartSound();
         localStorage.setItem("vex_wizard_user", email);
         localStorage.setItem("vex_wizard_name", name);
-        navigate("/onboarding", { state: { isNewUser: data.isNewUser } });
+        navigate("/onboarding", { state: { isNewUser } });
       } catch (err) {
-        setError("Error de conexión con el servidor.");
+        setError("Error de conexión con la base de datos.");
       } finally {
         setIsLoading(false);
       }
@@ -61,7 +71,7 @@ export default function Home() {
         <div className="flex flex-col items-center justify-center space-y-4">
           <div className="flex items-center justify-center">
             <img 
-              src="/Huo.png" 
+              src={HuoImg} 
               alt="Huo" 
               className="w-full max-w-[300px] h-auto object-contain drop-shadow-[0_0_40px_rgba(255,109,0,0.4)]" 
             />

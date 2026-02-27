@@ -9,6 +9,10 @@ import { Card, CardContent } from "../components/ui/Card";
 import { ExerciseIllustration } from "../components/ExerciseIllustration";
 import { ArrowLeft, CheckCircle2, Play, X, Loader2, Code2 } from "lucide-react";
 import { playSubmitSound, playErrorSound, playSuccessSound } from "../utils/audio";
+import { supabase } from "../lib/supabase";
+import HuoCelebrateImg from "../assets/Huo-Celebrate.png";
+import HuoGoldImg from "../assets/Huo-Gold.png";
+import HuoAngryImg from "../assets/Huo-angry.png";
 
 // Fix for Monaco Editor offsetNode bug in Firefox with version 0.55.x
 loader.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.46.0/min/vs' } });
@@ -53,18 +57,27 @@ export default function Exercise() {
       setCode(found.initialCode);
       
       // Fetch progress
-      fetch(`/api/progress/${email}`)
-        .then(res => res.json())
-        .then(data => {
-          const progress = data.progress.find((p: any) => p.exercise_id === id);
-          if (progress) {
+      const checkProgress = async () => {
+        try {
+          const { data: progressData, error } = await supabase
+            .from('progress')
+            .select('*')
+            .eq('email', email)
+            .eq('exercise_id', id)
+            .single();
+            
+          if (progressData && !error) {
             setIsAlreadyCompleted(true);
-            setCode(progress.final_code);
+            setCode(progressData.final_code);
             setCodeValid(true);
             setFeedback("Ya completaste este ejercicio. Puedes repasar tu código.");
           }
-        })
-        .catch(err => console.error("Error fetching progress", err));
+        } catch (err) {
+          console.error("Error fetching progress", err);
+        }
+      };
+      
+      checkProgress();
         
     } else {
       navigate("/path");
@@ -201,16 +214,19 @@ Devuelve un JSON con el siguiente formato estricto:
     const email = localStorage.getItem("vex_wizard_user");
     if (email) {
       try {
-        await fetch(`/api/progress/${email}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            exerciseId: id,
+        const { error } = await supabase
+          .from('progress')
+          .insert([{
+            email,
+            exercise_id: id,
             score: finalXp,
             attempts: mistakesCount + 1,
-            finalCode: code
-          }),
-        });
+            final_code: code
+          }]);
+          
+        if (error) {
+          console.error("Error saving progress", error);
+        }
       } catch (err) {
         console.error("Error saving progress", err);
       }
@@ -358,7 +374,7 @@ Devuelve un JSON con el siguiente formato estricto:
               <Card className="border-[var(--color-primary)] bg-[var(--color-surface)] shadow-[0_0_40px_rgba(255,109,0,0.3)]">
                 <CardContent className="flex flex-col items-center p-8 text-center">
                   <div className="mb-6 flex h-64 w-64 items-center justify-center">
-                    <img src="/Huo-Celebrate.png" alt="Huo Celebrate" className="h-full w-full object-contain drop-shadow-[0_0_20px_rgba(255,109,0,0.5)]" />
+                    <img src={HuoCelebrateImg} alt="Huo Celebrate" className="h-full w-full object-contain drop-shadow-[0_0_20px_rgba(255,109,0,0.5)]" />
                   </div>
                   <h2 className="mb-2 text-3xl font-bold text-white">¡Script Validado!</h2>
                   <p className="mb-8 text-[var(--color-text-muted)]">
@@ -397,7 +413,7 @@ Devuelve un JSON con el siguiente formato estricto:
               <Card className="border-[var(--color-primary)] bg-[var(--color-surface)] shadow-[0_0_80px_rgba(255,109,0,0.5)]">
                 <CardContent className="flex flex-col items-center p-8 text-center">
                   <div className="mb-6 flex h-48 w-48 items-center justify-center">
-                    <img src="/Huo-Gold.png" alt="Huo Gold" className="h-full w-full object-contain drop-shadow-[0_0_40px_rgba(255,215,0,0.8)]" />
+                    <img src={HuoGoldImg} alt="Huo Gold" className="h-full w-full object-contain drop-shadow-[0_0_40px_rgba(255,215,0,0.8)]" />
                   </div>
                   <h2 className="mb-2 text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600">
                     ¡Terminaste el Bloque 1!
@@ -436,7 +452,7 @@ Devuelve un JSON con el siguiente formato estricto:
               <Card className="border-red-500 bg-[var(--color-surface)] shadow-[0_0_40px_rgba(239,68,68,0.3)]">
                 <CardContent className="flex flex-col items-center p-8 text-center">
                   <div className="mb-6 flex h-64 w-64 items-center justify-center">
-                    <img src="/Huo-angry.png" alt="Huo Angry" className="h-full w-full object-contain drop-shadow-[0_0_20px_rgba(239,68,68,0.5)]" />
+                    <img src={HuoAngryImg} alt="Huo Angry" className="h-full w-full object-contain drop-shadow-[0_0_20px_rgba(239,68,68,0.5)]" />
                   </div>
                   <h2 className="mb-2 text-3xl font-bold text-white">¡Nu-uh!</h2>
                   <p className="mb-8 text-[var(--color-text-muted)]">

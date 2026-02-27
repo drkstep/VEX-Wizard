@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { motion } from "motion/react";
 import { Button } from "../components/ui/Button";
 import { playClickSound } from "../utils/audio";
+import HuoIntroImg from "../assets/Huo-Intro.png";
 
 const returningMessages = [
   "¿Ya de regreso? \n ¡Sigamos practicando!",
@@ -56,7 +57,7 @@ export default function Onboarding() {
         <div className="flex flex-col items-center justify-center space-y-6">
           <div className="flex items-center justify-center">
             <img 
-              src="/Huo-Intro.png" 
+              src={HuoIntroImg} 
               alt="Huo Intro" 
               className="w-full max-w-[300px] h-auto object-contain drop-shadow-[0_0_40px_rgba(255,109,0,0.4)]" 
             />

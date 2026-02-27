@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { weeks } from "../data/exercises";
 import { CheckCircle2, Circle, Lock, Star } from "lucide-react";
 import { playClickSound } from "../utils/audio";
+import { supabase } from "../lib/supabase";
 
 export default function Path() {
   const navigate = useNavigate();
@@ -25,12 +26,17 @@ export default function Path() {
 
     const fetchProgress = async () => {
       try {
-        const res = await fetch(`/api/progress/${email}`);
-        if (res.ok) {
-          const data = await res.json();
-          const completedIds = data.progress.map((p: any) => p.exercise_id);
+        const { data: progressData, error: progressError } = await supabase
+          .from('progress')
+          .select('*')
+          .eq('email', email);
+
+        if (!progressError && progressData) {
+          const completedIds = progressData.map((p: any) => p.exercise_id);
           setCompletedExercises(completedIds);
-          setXp(data.totalScore);
+          
+          const totalScore = progressData.reduce((sum, row) => sum + (row.score || 0), 0);
+          setXp(totalScore);
         }
       } catch (err) {
         console.error("Error fetching progress", err);
