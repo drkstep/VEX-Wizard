@@ -254,13 +254,10 @@ Devuelve un JSON con el siguiente formato estricto:
       </div>
 
       {/* Main Content Area (Split) */}
-      <div className="flex-1 overflow-hidden relative flex flex-row">
+      <div className="flex-1 overflow-hidden relative flex flex-col md:flex-row">
         {/* Left Pane: Editor & Correction */}
-        <motion.div 
-          className="relative flex flex-col h-full border-r border-white/10"
-          initial={false}
-          animate={{ width: isIllustrationExpanded ? "50%" : "75%" }}
-          transition={{ type: "spring", bounce: 0, duration: 0.4 }}
+        <div 
+          className={`relative flex flex-col h-1/2 md:h-full w-full transition-all duration-500 ease-in-out border-b md:border-b-0 md:border-r border-white/10 ${isIllustrationExpanded ? "md:w-1/2" : "md:w-3/4"}`}
           onClickCapture={() => setIsIllustrationExpanded(false)}
         >
           {correctCodeHtml && !codeValid ? (
@@ -315,26 +312,23 @@ Devuelve un JSON con el siguiente formato estricto:
               />
             </div>
           )}
-        </motion.div>
+        </div>
 
         {/* Right Pane: Illustration */}
-        <motion.div
-          className="relative h-full bg-[#0a0a0a] cursor-pointer overflow-hidden"
-          initial={false}
-          animate={{ width: isIllustrationExpanded ? "50%" : "25%" }}
-          transition={{ type: "spring", bounce: 0, duration: 0.4 }}
+        <div
+          className={`relative h-1/2 md:h-full w-full bg-[#0a0a0a] cursor-pointer overflow-hidden transition-all duration-500 ease-in-out ${isIllustrationExpanded ? "md:w-1/2" : "md:w-1/4"}`}
           onClick={() => setIsIllustrationExpanded(true)}
         >
           <ExerciseIllustration exerciseId={exercise.id} isExpanded={isIllustrationExpanded} />
-        </motion.div>
+        </div>
       </div>
 
       {/* Bottom Actions */}
       <div className="border-t border-white/10 bg-[var(--color-surface)] p-4 space-y-4">
-        <div className="flex gap-2">
+        <div className="flex flex-col md:flex-row gap-2">
           <Button
             variant="secondary"
-            className="flex-1"
+            className="flex-1 w-full"
             onClick={handleCopyCode}
           >
             <Play className="mr-2 h-5 w-5" />
@@ -343,7 +337,7 @@ Devuelve un JSON con el siguiente formato estricto:
           
           <Button
             variant="default"
-            className="flex-1"
+            className="flex-1 w-full"
             onClick={handleValidateCode}
             disabled={isValidating}
           >
