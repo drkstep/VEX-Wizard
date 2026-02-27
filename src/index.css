@@ -1,0 +1,40 @@
+@import url('https://fonts.cdnfonts.com/css/google-sans');
+@import "tailwindcss";
+
+@theme {
+  --color-bg-main: #121212;
+  --color-surface: #1E1E1E;
+  --color-primary: #FF6D00;
+  --color-primary-hover: #E66200;
+  --color-secondary: #00E5FF;
+  --color-text-main: #FFFFFF;
+  --color-text-muted: #A0A0A0;
+  
+  --font-sans: "Google Sans", "Product Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+body {
+  background-color: var(--color-bg-main);
+  color: var(--color-text-main);
+  font-family: var(--font-sans);
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom scrollbar for the code editor and path */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bg-main);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-surface);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
+}
