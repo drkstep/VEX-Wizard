@@ -3,6 +3,7 @@ import Home from "./pages/Home";
 import Onboarding from "./pages/Onboarding";
 import Path from "./pages/Path";
 import Exercise from "./pages/Exercise";
+import Scoreboard from "./pages/Scoreboard";
 
 export default function App() {
   return (
@@ -12,6 +13,7 @@ export default function App() {
         <Route path="/onboarding" element={<Onboarding />} />
         <Route path="/path" element={<Path />} />
         <Route path="/exercise/:id" element={<Exercise />} />
+        <Route path="/scoreboard" element={<Scoreboard />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>

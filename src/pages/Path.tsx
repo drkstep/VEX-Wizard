@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
 import { weeks } from "../data/exercises";
-import { CheckCircle2, Circle, Lock, Star } from "lucide-react";
+import { CheckCircle2, Circle, Lock, Star, Trophy } from "lucide-react";
 import { playClickSound } from "../utils/audio";
 import { supabase } from "../lib/supabase";
 
@@ -61,12 +61,19 @@ export default function Path() {
           <h1 className="text-xl font-bold text-[var(--color-primary)]">VEX Wizard</h1>
           {userName && <span className="text-sm text-[var(--color-text-muted)] hidden sm:inline-block">Hola, {userName}</span>}
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => { playClickSound(); navigate("/scoreboard"); }}
+            className="flex items-center gap-1.5 rounded-full bg-[var(--color-surface)] px-3 py-1.5 text-sm font-bold text-yellow-400 hover:bg-white/10 transition-colors"
+            title="Tabla de líderes"
+          >
+            <Trophy className="h-4 w-4" />
+          </button>
           <div className="flex items-center space-x-2 rounded-full bg-[var(--color-surface)] px-4 py-1.5 text-sm font-bold text-[var(--color-secondary)]">
             <Star className="h-4 w-4 fill-current" />
             <span>{xp} XP</span>
           </div>
-          <button 
+          <button
             onClick={() => {
               localStorage.removeItem("vex_wizard_user");
               localStorage.removeItem("vex_wizard_name");
