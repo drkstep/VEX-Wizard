@@ -116,8 +116,8 @@ export default function Path() {
                     const isLocked = isWeekLocked || (index > 0 && !completedExercises.includes(week.exercises[index - 1].id));
                     const isCurrent = !isCompleted && !isLocked;
 
-                    // Zig-zag pattern
-                    const offset = index % 2 === 0 ? -40 : 40;
+                    // Completed exercises are centered; pending ones zig-zag
+                    const offset = isCompleted ? 0 : (index % 2 === 0 ? -40 : 40);
 
                     return (
                       <motion.div
