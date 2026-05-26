@@ -91,16 +91,16 @@ export default function Exercise() {
     }
   }, [id, navigate]);
 
-  // Countdown tick
+  // Countdown tick — pauses while Gemini is validating
   useEffect(() => {
-    if (!timerStarted || timerExpired) return;
+    if (!timerStarted || timerExpired || isValidating) return;
     if (timeLeft <= 0) {
       setTimerExpired(true);
       return;
     }
     const tick = setTimeout(() => setTimeLeft((t) => t - 1), 1000);
     return () => clearTimeout(tick);
-  }, [timerStarted, timerExpired, timeLeft]);
+  }, [timerStarted, timerExpired, isValidating, timeLeft]);
 
   const formatTime = (s: number) => {
     const m = Math.floor(s / 60);
