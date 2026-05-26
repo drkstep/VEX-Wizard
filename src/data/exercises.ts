@@ -5,6 +5,7 @@ export interface Exercise {
   instruction: string;
   initialCode: string;
   requiresImage: boolean;
+  hasTimer?: boolean;
 }
 
 export interface Week {
@@ -299,95 +300,69 @@ export const weeks: Week[] = [
   },
   {
     id: "week-7",
-    title: "Semana 7: Interfaz y Canales (UI)",
-    description: "Sliders con chf(), chi(), chramp() y conexión de parámetros.",
+    title: "Semana 7: Repaso de Interfaz, VDBs y HDAs",
+    description: "Sliders con chf(), conversión y limpieza de VDBs, y empaquetado en Houdini Digital Assets.",
     exercises: [
       {
         id: "w7-e1",
         title: "Slider de Altura",
-        description: "Usando chf().",
-        instruction: "Multiplica @P.y por un canal flotante llamado 'altura_max' usando chf().",
-        initialCode: "// Escribe tu código aquí\n",
-        requiresImage: true
+        description: "La función correcta para un slider flotante.",
+        instruction: "Completa el código para crear un slider de tipo flotante llamado \"altura\" y usarlo para mover los puntos en Y.\n\nfloat altura = _______( \"altura\" );\n@P.y += altura;\n\nEscribe en el editor únicamente la función que va en el espacio en blanco.",
+        initialCode: "// ¿Qué función va en el espacio en blanco?\n// float altura = _______( \"altura\" );\n// @P.y += altura;\n\n",
+        requiresImage: false,
+        hasTimer: true
       },
       {
         id: "w7-e2",
-        title: "Selector Entero",
-        description: "Usando chi().",
-        instruction: "Crea un canal entero 'divisiones' y úsalo en una condición: si @ptnum % divisiones == 0, pinta de rojo.",
-        initialCode: "// Escribe tu código aquí\n",
-        requiresImage: true
+        title: "VDB Limpio",
+        description: "Orden correcto de nodos para convertir y limpiar un VDB.",
+        instruction: "Tienes una malla poligonal y quieres convertirla a VDB, suavizarla y obtener una malla limpia con topología uniforme. Escribe en orden los nodos que usarías (uno por línea).",
+        initialCode: "// Escribe los nodos en orden (uno por línea):\n// 1. \n// 2. \n// 3. \n// 4. \n",
+        requiresImage: false,
+        hasTimer: true
       },
       {
         id: "w7-e3",
-        title: "Control de Vector",
-        description: "Usando chv().",
-        instruction: "Suma a @P un canal de vector llamado 'desplazamiento' usando chv().",
-        initialCode: "// Escribe tu código aquí\n",
-        requiresImage: true
-      },
-      {
-        id: "w7-e4",
-        title: "Rampa de Color",
-        description: "Usando chramp().",
-        instruction: "Usa chramp('mi_color', @P.y) para asignar colores basados en la altura del punto.",
-        initialCode: "// Escribe tu código aquí\n",
-        requiresImage: true
-      },
-      {
-        id: "w7-e5",
-        title: "Velocidad Controlada",
-        description: "UI para animación.",
-        instruction: "Multiplica @Time por un canal flotante 'velocidad' antes de pasarlo a una función sin() que modifique @P.x.",
-        initialCode: "// Escribe tu código aquí\n",
-        requiresImage: true
+        title: "Mi Primer HDA",
+        description: "Cómo convertir un subnet en un Houdini Digital Asset.",
+        instruction: "Tienes una red de nodos dentro de un subnet que quieres convertir en una herramienta reutilizable con su propio ícono e interfaz (HDA). ¿Qué opción del menú contextual (clic derecho sobre el subnet) usas? Escribe el nombre de la opción.",
+        initialCode: "// Escribe el nombre de la opción de menú:\n\n",
+        requiresImage: false,
+        hasTimer: true
       }
     ]
   },
   {
     id: "week-8",
-    title: "Semana 8: Consolidación y Generadores",
-    description: "Lógica de Switch, limpieza, optimización e integración total.",
+    title: "Semana 8: El Hechizo Final (Vellum y Wedge)",
+    description: "Pines para fijar tela, presión para inflar geometría y wedge para generar variaciones de simulación.",
     exercises: [
       {
         id: "w8-e1",
-        title: "Lógica de Switch",
-        description: "Cambiando comportamientos.",
-        instruction: "Crea un chi('modo'). Si es 0, haz @P.y = sin(@P.x); si es 1, haz @P.y = cos(@P.x).",
-        initialCode: "// Escribe tu código aquí\n",
-        requiresImage: true
+        title: "El Punto Fijo",
+        description: "Fijar puntos de una tela Vellum.",
+        instruction: "Tienes una tela simulada con Vellum y quieres que un grupo de puntos llamado \"pin\" quede fijo en su posición original. ¿Qué nodo de Vellum agregas, y qué valor pones en el campo Group? Escribe ambas respuestas.",
+        initialCode: "// Nodo que agregas:\n\n// Valor del campo Group:\n\n",
+        requiresImage: false,
+        hasTimer: true
       },
       {
         id: "w8-e2",
-        title: "Limpieza de Atributos",
-        description: "Borrando datos temporales.",
-        instruction: "Calcula un valor temporal, úsalo para modificar @P, y luego asegúrate de no guardarlo como atributo (usa variables locales).",
-        initialCode: "// Escribe tu código aquí\n",
-        requiresImage: false
+        title: "Inflando la Esfera",
+        description: "El nodo que infla geometría como un globo en Vellum.",
+        instruction: "Quieres inflar una esfera con Vellum como si fuera un globo. ¿Qué nodo agregas que crea automáticamente dos constraints internos (un Vellum Cloth y un Vellum Pressure)? Escribe el nombre del nodo.",
+        initialCode: "// Escribe el nombre del nodo:\n\n",
+        requiresImage: false,
+        hasTimer: true
       },
       {
         id: "w8-e3",
-        title: "Generador de Ruido",
-        description: "Usando noise().",
-        instruction: "Añade ruido a @P usando la función noise(@P) multiplicada por un chf('amplitud').",
-        initialCode: "// Escribe tu código aquí\n",
-        requiresImage: true
-      },
-      {
-        id: "w8-e4",
-        title: "Sistema de Partículas Falso",
-        description: "Integrando conceptos.",
-        instruction: "Mueve los puntos hacia arriba con @Time, y si @P.y > chf('limite'), devuélvelos a @P.y = 0.",
-        initialCode: "// Escribe tu código aquí\n",
-        requiresImage: true
-      },
-      {
-        id: "w8-e5",
-        title: "El Hechizo Final",
-        description: "El proyecto final.",
-        instruction: "Combina chf(), sin(), @Time y @Cd para crear un efecto de onda colorida y controlable. ¡Eres un VEX Wizard!",
-        initialCode: "// Escribe tu código aquí\n",
-        requiresImage: true
+        title: "Diez Simulaciones",
+        description: "Herramienta para generar variaciones automáticas de simulación.",
+        instruction: "Quieres correr 10 versiones de tu simulación de Vellum variando automáticamente la rigidez (stiffness). ¿Qué nodo o herramienta de Houdini usas, y en una frase qué hace? Escribe el nombre y una breve descripción.",
+        initialCode: "// Nodo / Herramienta:\n\n// ¿Qué hace?:\n\n",
+        requiresImage: false,
+        hasTimer: true
       }
     ]
   }

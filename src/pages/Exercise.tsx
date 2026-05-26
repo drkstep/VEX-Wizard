@@ -7,7 +7,7 @@ import { weeks, Exercise as ExerciseType } from "../data/exercises";
 import { Button } from "../components/ui/Button";
 import { Card, CardContent } from "../components/ui/Card";
 import { ExerciseIllustration } from "../components/ExerciseIllustration";
-import { ArrowLeft, CheckCircle2, Play, X, Loader2, Code2 } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Play, X, Loader2, Code2, Clock } from "lucide-react";
 import { playSubmitSound, playErrorSound, playSuccessSound } from "../utils/audio";
 import { supabase } from "../lib/supabase";
 
@@ -33,6 +33,13 @@ export default function Exercise() {
   const [showFinalPopup, setShowFinalPopup] = useState(false);
   const [showPasteWarning, setShowPasteWarning] = useState(false);
 
+  // Timer state (for timed exercises in weeks 7 & 8)
+  const TIMER_SECONDS = 80;
+  const [showTimerIntro, setShowTimerIntro] = useState(false);
+  const [timerStarted, setTimerStarted] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(TIMER_SECONDS);
+  const [timerExpired, setTimerExpired] = useState(false);
+
   useEffect(() => {
     const email = localStorage.getItem("vex_wizard_user");
     if (!email) {
@@ -52,8 +59,7 @@ export default function Exercise() {
     if (found) {
       setExercise(found);
       setCode(found.initialCode);
-      
-      // Fetch progress
+
       const checkProgress = async () => {
         try {
           const { data: progressData, error } = await supabase
@@ -62,24 +68,49 @@ export default function Exercise() {
             .eq('email', email)
             .eq('exercise_id', id)
             .single();
-            
+
           if (progressData && !error) {
             setIsAlreadyCompleted(true);
             setCode(progressData.final_code);
             setCodeValid(true);
             setFeedback("Ya completaste este ejercicio. Puedes repasar tu código.");
+          } else if (found?.hasTimer) {
+            // Show timer intro only for fresh (not yet completed) timed exercises
+            setShowTimerIntro(true);
           }
         } catch (err) {
           console.error("Error fetching progress", err);
+          if (found?.hasTimer) setShowTimerIntro(true);
         }
       };
-      
+
       checkProgress();
-        
+
     } else {
       navigate("/path");
     }
   }, [id, navigate]);
+
+  // Countdown tick
+  useEffect(() => {
+    if (!timerStarted || timerExpired) return;
+    if (timeLeft <= 0) {
+      setTimerExpired(true);
+      return;
+    }
+    const tick = setTimeout(() => setTimeLeft((t) => t - 1), 1000);
+    return () => clearTimeout(tick);
+  }, [timerStarted, timerExpired, timeLeft]);
+
+  const formatTime = (s: number) => {
+    const m = Math.floor(s / 60);
+    return `${m}:${(s % 60).toString().padStart(2, "0")}`;
+  };
+
+  const handleStartTimer = () => {
+    setShowTimerIntro(false);
+    setTimerStarted(true);
+  };
 
   const handleEditorPaste = (e: React.ClipboardEvent) => {
     e.preventDefault();
@@ -193,7 +224,7 @@ Devuelve un JSON con el siguiente formato estricto:
   const completeExercise = async () => {
     playSuccessSound();
     
-    if (id === "w8-e5") {
+    if (id === "w8-e3") {
       setShowFinalPopup(true);
     } else {
       setShowSuccess(true);
@@ -243,7 +274,22 @@ Devuelve un JSON con el siguiente formato estricto:
           <ArrowLeft className="h-6 w-6" />
         </button>
         <h1 className="text-lg font-bold">{exercise.title}</h1>
-        <div className="w-10" /> {/* Spacer */}
+        {exercise.hasTimer && timerStarted ? (
+          <div className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-bold font-mono transition-colors ${
+            timerExpired
+              ? "bg-red-500/20 text-red-400"
+              : timeLeft <= 20
+              ? "bg-red-500/20 text-red-400 animate-pulse"
+              : timeLeft <= 40
+              ? "bg-yellow-500/20 text-yellow-400"
+              : "bg-[var(--color-surface)] text-[var(--color-secondary)]"
+          }`}>
+            <Clock className="h-3.5 w-3.5" />
+            <span>{timerExpired ? "0:00" : formatTime(timeLeft)}</span>
+          </div>
+        ) : (
+          <div className="w-10" />
+        )}
       </header>
 
       {/* Instruction */}
@@ -339,10 +385,10 @@ Devuelve un JSON con el siguiente formato estricto:
             variant="default"
             className="flex-1 w-full"
             onClick={handleValidateCode}
-            disabled={isValidating}
+            disabled={isValidating || (!!exercise.hasTimer && timerExpired)}
           >
             {isValidating ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <Code2 className="mr-2 h-5 w-5" />}
-            {isAlreadyCompleted ? "Re-Validar (Sin Puntos)" : "Validar Código"}
+            {timerExpired ? "Tiempo Agotado" : isAlreadyCompleted ? "Re-Validar (Sin Puntos)" : "Validar Código"}
           </Button>
         </div>
       </div>
@@ -425,6 +471,44 @@ Devuelve un JSON con el siguiente formato estricto:
           </motion.div>
         )}
       </AnimatePresence>
+      {/* Timer Intro Modal */}
+      <AnimatePresence>
+        {showTimerIntro && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              className="w-full max-w-sm"
+            >
+              <Card className="border-[var(--color-secondary)] bg-[var(--color-surface)] shadow-[0_0_40px_rgba(0,229,255,0.2)]">
+                <CardContent className="flex flex-col items-center p-8 text-center">
+                  <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-[var(--color-secondary)]/10 border-2 border-[var(--color-secondary)]">
+                    <Clock className="h-10 w-10 text-[var(--color-secondary)]" />
+                  </div>
+                  <h2 className="mb-2 text-2xl font-bold text-white">Ejercicio Cronometrado</h2>
+                  <p className="mb-1 text-[var(--color-text-muted)]">
+                    Este ejercicio tiene un tiempo límite de
+                  </p>
+                  <p className="mb-6 text-4xl font-extrabold font-mono text-[var(--color-secondary)]">1:20</p>
+                  <p className="mb-8 text-sm text-[var(--color-text-muted)]">
+                    El temporizador comenzará cuando presiones <strong className="text-white">Empezar</strong>. Una vez iniciado, no se puede pausar.
+                  </p>
+                  <Button className="w-full" size="lg" onClick={handleStartTimer}>
+                    Empezar
+                  </Button>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Paste Warning Modal */}
       <AnimatePresence>
         {showPasteWarning && (
