@@ -341,8 +341,8 @@ export const weeks: Week[] = [
         id: "w8-e1",
         title: "El Punto Fijo",
         description: "Fijar puntos de una tela Vellum.",
-        instruction: "Tienes una tela simulada con Vellum y quieres que un grupo de puntos llamado \"pin\" quede fijo en su posición original. ¿Qué nodo de Vellum agregas, y qué valor pones en el campo Group? Escribe ambas respuestas.",
-        initialCode: "// Nodo que agregas:\n\n// Valor del campo Group:\n\n",
+        instruction: "Tienes una tela simulada con Vellum y quieres que un grupo de puntos de esa misma tela llamado \"pinesVellum\" quede fijo a otro grupo de puntos llamado \"pinesObjeto\" de un objeto diferente. ¿Qué nodo de Vellum agregas, y qué valor pones en los campos Geometry › Group y Target Geometry › Target Group? Escribe las tres respuestas.",
+        initialCode: "// Nodo que agregas:\n\n// Geometry - Group:\n\n// Target Geometry - Target Group:\n\n",
         requiresImage: false,
         hasTimer: true
       },
@@ -359,7 +359,7 @@ export const weeks: Week[] = [
         id: "w8-e3",
         title: "Diez Simulaciones",
         description: "Herramienta para generar variaciones automáticas de simulación.",
-        instruction: "Quieres correr 10 versiones de tu simulación de Vellum variando automáticamente la rigidez (stiffness). ¿Qué nodo o herramienta de Houdini usas, y en una frase qué hace? Escribe el nombre y una breve descripción.",
+        instruction: "Quieres correr 10 versiones de tu simulación de Vellum variando automáticamente la rigidez (stiffness). ¿Qué nodo o herramienta de Houdini usas, y en una frase qué hace? Escribe el nombre y una breve descripción.\n\nNota: la respuesta correcta es el nodo Wedge. Para la descripción, se acepta cualquier idea que transmita que permite correr varias versiones de la simulación con diferentes valores al mismo tiempo.",
         initialCode: "// Nodo / Herramienta:\n\n// ¿Qué hace?:\n\n",
         requiresImage: false,
         hasTimer: true
