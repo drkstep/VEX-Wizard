@@ -26,7 +26,7 @@ export default function Home() {
     if (email && name) {
       setIsLoading(true);
       try {
-        const { data: existingUser, error: fetchError } = await supabase
+        const { data: existingUser } = await supabase
           .from('users')
           .select('*')
           .eq('email', email)
@@ -39,7 +39,7 @@ export default function Home() {
           const { error: insertError } = await supabase
             .from('users')
             .insert([{ email, name }]);
-            
+
           if (insertError) {
             setError("Error al crear usuario en la base de datos.");
             setIsLoading(false);
@@ -47,9 +47,18 @@ export default function Home() {
           }
         }
 
+        // Ensure the root admin is always marked as admin in the DB
+        const ROOT_ADMIN = "svazquez@centro.edu.mx";
+        if (email === ROOT_ADMIN) {
+          await supabase.from('users').update({ is_admin: true }).eq('email', email);
+        }
+
+        const isAdmin = email === ROOT_ADMIN ? true : (existingUser?.is_admin === true);
+
         playStartSound();
         localStorage.setItem("vex_wizard_user", email);
         localStorage.setItem("vex_wizard_name", name);
+        localStorage.setItem("vex_wizard_admin", isAdmin ? "true" : "false");
         navigate("/onboarding", { state: { isNewUser } });
       } catch (err) {
         setError("Error de conexión con la base de datos.");
