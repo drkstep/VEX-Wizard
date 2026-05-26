@@ -668,13 +668,13 @@ const IllustrationW6E5 = ({ isExpanded }: { isExpanded: boolean }) => (
   </div>
 );
 
-// W7-E1: Slider de Altura — chf() slider controls @P.y
+// W7-E1: Slider de Altura — a float channel slider controlling @P.y
 const IllustrationW7E1 = ({ isExpanded }: { isExpanded: boolean }) => (
   <div className="flex items-center gap-8">
     {/* Slider panel */}
     <div className="flex flex-col items-center gap-2">
       <div className="text-[10px] font-mono text-[var(--color-secondary)] bg-[var(--color-secondary)]/10 px-2 py-0.5 rounded border border-[var(--color-secondary)]/30">
-        chf()
+        float
       </div>
       <div className="relative h-28 w-3 bg-white/10 rounded-full">
         <motion.div
@@ -711,14 +711,14 @@ const IllustrationW7E1 = ({ isExpanded }: { isExpanded: boolean }) => (
   </div>
 );
 
-// W7-E2: VDB Limpio — node pipeline: Poly → VDB → Smooth → Convert → Remesh
+// W7-E2: VDB Limpio — abstract node pipeline (no node names revealed)
 const IllustrationW7E2 = ({ isExpanded }: { isExpanded: boolean }) => {
   const nodes = [
-    { label: "Poly", col: "rgba(255,255,255,0.3)" },
-    { label: "VDB", col: "#FF6D00" },
-    { label: "Smooth", col: "#FF6D00" },
-    { label: "Convert", col: "#00E5FF" },
-    { label: "Remesh", col: "#00E5FF" },
+    { label: "①", col: "rgba(255,255,255,0.3)" },
+    { label: "②", col: "#FF6D00" },
+    { label: "③", col: "#FF6D00" },
+    { label: "④", col: "#00E5FF" },
+    { label: "⑤", col: "#00E5FF" },
   ];
   return (
     <div className="flex flex-col items-center gap-4">
@@ -770,7 +770,7 @@ const IllustrationW7E3 = ({ isExpanded }: { isExpanded: boolean }) => (
       animate={{ opacity: [0, 1, 1, 1, 0], scale: [0.92, 1, 1, 1, 0.92], y: [-4, 0, 0, 0, -4] }}
       transition={{ duration: 4, repeat: Infinity, repeatDelay: 0.8, ease: "easeOut" }}
     >
-      {["Type Properties…", "Allow Editing", "Create Digital Asset"].map((item, i) => (
+      {["Type Properties…", "Allow Editing", "· · · · · · · · · ·"].map((item, i) => (
         <motion.div
           key={i}
           className={`px-3 py-1.5 text-[10px] font-mono border-b border-white/5 last:border-0 ${
@@ -829,7 +829,7 @@ const IllustrationW8E1 = ({ isExpanded }: { isExpanded: boolean }) => (
       ))}
     </div>
 
-    <div className="text-[9px] font-mono text-[var(--color-primary)]/60 mt-2">pinesVellum · fixed</div>
+    <div className="text-[9px] font-mono text-[var(--color-primary)]/60 mt-2">grupo · fijo</div>
   </div>
 );
 
@@ -859,7 +859,7 @@ const IllustrationW8E2 = ({ isExpanded }: { isExpanded: boolean }) => (
         transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.5, ease: "easeIn" }}
       />
     ))}
-    <div className="absolute bottom-1 text-[9px] font-mono text-[var(--color-secondary)]/60">pressure ++</div>
+    <div className="absolute bottom-1 text-[9px] font-mono text-[var(--color-secondary)]/60">inflando…</div>
   </div>
 );
 
@@ -889,7 +889,7 @@ const IllustrationW8E3 = ({ isExpanded }: { isExpanded: boolean }) => (
         </div>
       );
     })}
-    <div className="text-[9px] font-mono text-white/25 text-center mt-1">wedge · 4 variaciones</div>
+    <div className="text-[9px] font-mono text-white/25 text-center mt-1">4 variaciones · sim</div>
   </div>
 );
 
