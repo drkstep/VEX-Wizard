@@ -70,10 +70,12 @@ export function ExerciseIllustration({ exerciseId, isExpanded }: { exerciseId: s
         return <IllustrationW7E2 isExpanded={isExpanded} />;
       case 'w7-e3':
         return <IllustrationW7E3 isExpanded={isExpanded} />;
-      case 'w7-e4':
-        return <IllustrationW7E4 isExpanded={isExpanded} />;
-      case 'w7-e5':
-        return <IllustrationW7E5 isExpanded={isExpanded} />;
+      case 'w8-e1':
+        return <IllustrationW8E1 isExpanded={isExpanded} />;
+      case 'w8-e2':
+        return <IllustrationW8E2 isExpanded={isExpanded} />;
+      case 'w8-e3':
+        return <IllustrationW8E3 isExpanded={isExpanded} />;
       default:
         return <IllustrationGeneric isExpanded={isExpanded} />;
     }
@@ -666,96 +668,228 @@ const IllustrationW6E5 = ({ isExpanded }: { isExpanded: boolean }) => (
   </div>
 );
 
+// W7-E1: Slider de Altura — chf() slider controls @P.y
 const IllustrationW7E1 = ({ isExpanded }: { isExpanded: boolean }) => (
-  <div className="relative w-40 h-48 flex items-end justify-center pb-4">
-    <motion.div
-      className="w-16 bg-[var(--color-secondary)] rounded-t-xl"
-      animate={{ height: [20, 120, 60, 140, 40] }}
-      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-    />
-    <div className="absolute right-4 top-1/2 -translate-y-1/2 w-2 h-24 bg-white/20 rounded-full">
+  <div className="flex items-center gap-8">
+    {/* Slider panel */}
+    <div className="flex flex-col items-center gap-2">
+      <div className="text-[10px] font-mono text-[var(--color-secondary)] bg-[var(--color-secondary)]/10 px-2 py-0.5 rounded border border-[var(--color-secondary)]/30">
+        chf()
+      </div>
+      <div className="relative h-28 w-3 bg-white/10 rounded-full">
+        <motion.div
+          className="absolute bottom-0 w-full bg-[var(--color-primary)] rounded-full"
+          animate={{ height: ["20%", "90%", "45%", "75%", "20%"] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute w-5 h-5 bg-white rounded-full -left-1 shadow-md border-2 border-[var(--color-primary)]"
+          animate={{ bottom: ["15%", "83%", "38%", "68%", "15%"] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        />
+      </div>
+      <div className="text-[10px] font-mono text-white/40">altura</div>
+    </div>
+
+    {/* Arrow */}
+    <div className="flex flex-col items-center gap-1">
+      <div className="w-8 h-0.5 bg-white/20 relative">
+        <motion.div className="absolute inset-0 bg-[var(--color-primary)]" animate={{ scaleX: [0, 1, 0] }} transition={{ duration: 5, repeat: Infinity }} style={{ transformOrigin: "left" }} />
+      </div>
+      <div className="text-[9px] font-mono text-white/30">@P.y</div>
+    </div>
+
+    {/* Point moving on Y axis */}
+    <div className="relative h-28 w-10 flex items-center justify-center">
+      <div className="absolute h-full w-px border-l-2 border-dashed border-white/15" />
       <motion.div
-        className="w-4 h-4 bg-white rounded-full absolute -left-1"
-        animate={{ y: [100, 0, 60, -20, 80] }}
-        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+        className="w-7 h-7 rounded-full bg-[var(--color-primary)] shadow-[0_0_16px_var(--color-primary)] z-10"
+        animate={{ y: [30, -42, 8, -24, 30] }}
+        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
       />
     </div>
   </div>
 );
 
-const IllustrationW7E2 = ({ isExpanded }: { isExpanded: boolean }) => (
-  <div className="relative w-40 h-40 flex items-center justify-center">
-    <motion.div
-      className="bg-[var(--color-primary)] shadow-[0_0_20px_var(--color-primary)]"
-      animate={{ 
-        borderRadius: ["0%", "50%", "20%", "0%"],
-        rotate: [0, 90, 180, 360],
-        scale: [1, 1.2, 0.8, 1]
-      }}
-      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-      style={{ width: 60, height: 60 }}
-    />
-    <div className="absolute bottom-2 font-mono text-xs text-white/50">
-      <motion.span animate={{ opacity: [1, 0, 0] }} transition={{ duration: 4, repeat: Infinity }}>0</motion.span>
-      <motion.span animate={{ opacity: [0, 1, 0] }} transition={{ duration: 4, repeat: Infinity }}>1</motion.span>
-      <motion.span animate={{ opacity: [0, 0, 1] }} transition={{ duration: 4, repeat: Infinity }}>2</motion.span>
+// W7-E2: VDB Limpio — node pipeline: Poly → VDB → Smooth → Convert → Remesh
+const IllustrationW7E2 = ({ isExpanded }: { isExpanded: boolean }) => {
+  const nodes = [
+    { label: "Poly", col: "rgba(255,255,255,0.3)" },
+    { label: "VDB", col: "#FF6D00" },
+    { label: "Smooth", col: "#FF6D00" },
+    { label: "Convert", col: "#00E5FF" },
+    { label: "Remesh", col: "#00E5FF" },
+  ];
+  return (
+    <div className="flex flex-col items-center gap-4">
+      <div className="flex items-center gap-1.5">
+        {nodes.map((node, i) => (
+          <React.Fragment key={i}>
+            <motion.div
+              className="px-2 py-1.5 rounded-lg border text-[9px] font-mono font-bold text-white text-center"
+              style={{ minWidth: 42, borderColor: node.col + "50", backgroundColor: node.col + "15" }}
+              animate={{ borderColor: [node.col + "30", node.col, node.col + "30"], backgroundColor: [node.col + "08", node.col + "22", node.col + "08"] }}
+              transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.45 }}
+            >
+              {node.label}
+            </motion.div>
+            {i < nodes.length - 1 && (
+              <motion.div
+                className="h-px w-3 rounded-full"
+                animate={{ backgroundColor: ["rgba(255,255,255,0.1)", "rgba(255,255,255,0.5)", "rgba(255,255,255,0.1)"] }}
+                transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.45 }}
+              />
+            )}
+          </React.Fragment>
+        ))}
+      </div>
+      {/* Particle flowing through */}
+      <motion.div
+        className="w-2.5 h-2.5 rounded-full bg-[var(--color-secondary)] shadow-[0_0_8px_var(--color-secondary)]"
+        animate={{ x: [-90, 90] }}
+        transition={{ duration: 2.5, repeat: Infinity, ease: "linear", repeatDelay: 0.3 }}
+      />
     </div>
-  </div>
-);
+  );
+};
 
+// W7-E3: Mi Primer HDA — right-click on subnet → Create Digital Asset
 const IllustrationW7E3 = ({ isExpanded }: { isExpanded: boolean }) => (
-  <div className="relative w-48 h-48 flex items-center justify-center perspective-1000">
+  <div className="relative flex items-center justify-center w-48 h-40">
+    {/* Subnet node */}
+    <div className="w-24 h-14 rounded-xl border-2 border-white/20 bg-[var(--color-surface)] flex flex-col items-center justify-center gap-0.5 z-10">
+      <div className="text-[9px] font-mono text-white/40">subnet</div>
+      <div className="w-8 h-1 rounded bg-white/10" />
+      <div className="w-6 h-1 rounded bg-white/10" />
+    </div>
+
+    {/* Context menu */}
     <motion.div
-      className="w-4 h-4 bg-white rounded-full absolute z-20 shadow-[0_0_15px_white]"
-      animate={{ 
-        x: [-40, 40, 0, -40],
-        y: [-40, 0, 40, -40],
-        scale: [1, 1.5, 0.8, 1]
-      }}
-      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-    />
-    <div className="w-32 h-32 border border-dashed border-white/20 rounded-full" style={{ transform: 'rotateX(60deg)' }} />
-    <div className="w-32 h-32 border border-dashed border-white/20 rounded-full absolute" style={{ transform: 'rotateY(60deg)' }} />
+      className="absolute top-2 left-[calc(50%+8px)] bg-[#252525] border border-white/20 rounded-lg shadow-2xl z-20 overflow-hidden"
+      style={{ minWidth: 148 }}
+      animate={{ opacity: [0, 1, 1, 1, 0], scale: [0.92, 1, 1, 1, 0.92], y: [-4, 0, 0, 0, -4] }}
+      transition={{ duration: 4, repeat: Infinity, repeatDelay: 0.8, ease: "easeOut" }}
+    >
+      {["Type Properties…", "Allow Editing", "Create Digital Asset"].map((item, i) => (
+        <motion.div
+          key={i}
+          className={`px-3 py-1.5 text-[10px] font-mono border-b border-white/5 last:border-0 ${
+            i === 2
+              ? "text-[var(--color-primary)] font-bold"
+              : "text-white/40"
+          }`}
+          animate={i === 2 ? { backgroundColor: ["rgba(255,109,0,0.05)", "rgba(255,109,0,0.22)", "rgba(255,109,0,0.05)"] } : {}}
+          transition={{ duration: 1.5, repeat: Infinity }}
+        >
+          {item}
+        </motion.div>
+      ))}
+    </motion.div>
   </div>
 );
 
-const IllustrationW7E4 = ({ isExpanded }: { isExpanded: boolean }) => (
-  <div className="flex gap-1 items-center justify-center w-48 h-20">
-    {Array.from({ length: 20 }).map((_, i) => (
+// W8-E1: El Punto Fijo — Vellum cloth with top points pinned (orange) and fabric waving below
+const IllustrationW8E1 = ({ isExpanded }: { isExpanded: boolean }) => (
+  <div className="flex flex-col items-center gap-0">
+    {/* Pinned top row */}
+    <div className="flex gap-5 mb-1">
+      {[0, 1, 2, 3].map((i) => (
+        <div key={i} className="flex flex-col items-center gap-0.5">
+          <div className="w-px h-3 bg-[var(--color-primary)]/60" />
+          <motion.div
+            className="w-5 h-5 rounded-full bg-[var(--color-primary)] border-2 border-[var(--color-primary)]/40 shadow-[0_0_10px_var(--color-primary)]"
+            animate={{ scale: [1, 1.08, 1] }}
+            transition={{ duration: 2, repeat: Infinity, delay: i * 0.1 }}
+          />
+        </div>
+      ))}
+    </div>
+
+    {/* Cloth threads */}
+    <div className="flex gap-5">
+      {[0, 1, 2, 3].map((col) => (
+        <motion.div
+          key={col}
+          className="w-px h-14 bg-white/25 origin-top rounded-full"
+          animate={{ skewX: [0, (col - 1.5) * 10, -(col - 1.5) * 10, 0] }}
+          transition={{ duration: 3, repeat: Infinity, delay: col * 0.2, ease: "easeInOut" }}
+        />
+      ))}
+    </div>
+
+    {/* Free bottom row */}
+    <div className="flex gap-5">
+      {[0, 1, 2, 3].map((i) => (
+        <motion.div
+          key={i}
+          className="w-4 h-4 rounded-full bg-white/50 border border-white/20"
+          animate={{ y: [0, 10, -5, 7, 0], x: [0, (i - 1.5) * 4, -(i - 1.5) * 4, 0] }}
+          transition={{ duration: 3, repeat: Infinity, delay: i * 0.18, ease: "easeInOut" }}
+        />
+      ))}
+    </div>
+
+    <div className="text-[9px] font-mono text-[var(--color-primary)]/60 mt-2">pinesVellum · fixed</div>
+  </div>
+);
+
+// W8-E2: Inflando la Esfera — Vellum balloon inflation with pressure
+const IllustrationW8E2 = ({ isExpanded }: { isExpanded: boolean }) => (
+  <div className="relative w-44 h-44 flex items-center justify-center">
+    {/* Outer glow ring */}
+    <motion.div
+      className="absolute rounded-full border border-[var(--color-secondary)]/20"
+      animate={{ width: [60, 130, 60], height: [60, 130, 60], opacity: [0.6, 0, 0.6] }}
+      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+    />
+    {/* Inflating sphere */}
+    <motion.div
+      className="rounded-full border-2 border-[var(--color-secondary)] shadow-[0_0_24px_var(--color-secondary)]"
+      style={{ background: "radial-gradient(circle at 35% 35%, rgba(0,229,255,0.4), rgba(0,229,255,0.1))" }}
+      animate={{ width: [48, 110, 48], height: [48, 110, 48] }}
+      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+    />
+    {/* Air particles entering from below */}
+    {[0, 1, 2].map((i) => (
       <motion.div
         key={i}
-        className="w-2 h-12 rounded-full"
-        style={{ 
-          backgroundColor: `hsl(${(i / 20) * 360}, 80%, 60%)` 
-        }}
-        animate={{ height: [48, 24, 48] }}
-        transition={{ duration: 2, repeat: Infinity, delay: i * 0.1, ease: "easeInOut" }}
+        className="absolute w-2 h-2 rounded-full bg-white/50"
+        style={{ left: `${42 + i * 8}%` }}
+        animate={{ y: [40, 0], opacity: [0, 0.8, 0], scale: [0.5, 1, 0] }}
+        transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.5, ease: "easeIn" }}
       />
     ))}
+    <div className="absolute bottom-1 text-[9px] font-mono text-[var(--color-secondary)]/60">pressure ++</div>
   </div>
 );
 
-const IllustrationW7E5 = ({ isExpanded }: { isExpanded: boolean }) => (
-  <div className="relative w-48 h-32 flex items-center overflow-hidden">
-    <div className="absolute w-full h-0.5 bg-white/20 border-t border-dashed border-white/40" />
-    <motion.div
-      className="w-6 h-6 bg-[var(--color-secondary)] rounded-full z-10 shadow-[0_0_15px_var(--color-secondary)]"
-      animate={{ x: [-20, 200] }}
-      transition={{ 
-        duration: 4, 
-        repeat: Infinity, 
-        times: [0, 1],
-        ease: [0.1, 0.9, 0.2, 1] // Custom ease for fast then slow
-      }}
-    />
-    <div className="absolute bottom-4 right-4 w-8 h-8 rounded-full border-2 border-white/30 flex items-center justify-center">
-      <motion.div 
-        className="w-1 h-3 bg-white origin-bottom"
-        style={{ bottom: '50%' }}
-        animate={{ rotate: [0, 360] }}
-        transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-      />
-    </div>
+// W8-E3: Diez Simulaciones — Wedge: multiple parallel simulation runs with varied parameters
+const IllustrationW8E3 = ({ isExpanded }: { isExpanded: boolean }) => (
+  <div className="flex flex-col gap-2.5 w-44">
+    {[0, 1, 2, 3].map((i) => {
+      const hue = 28 + i * 18;
+      const fill = (i + 1) * 22;
+      return (
+        <div key={i} className="flex items-center gap-2">
+          <div className="text-[9px] font-mono text-white/35 w-5 shrink-0">v{i + 1}</div>
+          <div className="relative flex-1 h-3.5 bg-white/5 rounded-full overflow-hidden border border-white/10">
+            <motion.div
+              className="h-full rounded-full"
+              style={{ backgroundColor: `hsl(${hue}, 75%, 55%)` }}
+              animate={{ width: ["0%", `${fill}%`] }}
+              transition={{ duration: 3, repeat: Infinity, delay: i * 0.25, ease: "easeOut", repeatDelay: 0.6 }}
+            />
+          </div>
+          <motion.div
+            className="w-3 h-3 rounded-full shrink-0"
+            style={{ backgroundColor: `hsl(${hue}, 75%, 55%)`, boxShadow: `0 0 6px hsl(${hue}, 75%, 55%)` }}
+            animate={{ scale: [0.8, 1 + i * 0.15, 0.8] }}
+            transition={{ duration: 3, repeat: Infinity, delay: i * 0.25 }}
+          />
+        </div>
+      );
+    })}
+    <div className="text-[9px] font-mono text-white/25 text-center mt-1">wedge · 4 variaciones</div>
   </div>
 );
 

@@ -32,6 +32,7 @@ export default function Exercise() {
 
   const [showFinalPopup, setShowFinalPopup] = useState(false);
   const [showPasteWarning, setShowPasteWarning] = useState(false);
+  const [showExitWarning, setShowExitWarning] = useState(false);
 
   // Timer state (for timed exercises in weeks 7 & 8)
   const TIMER_SECONDS = 80;
@@ -110,6 +111,32 @@ export default function Exercise() {
   const handleStartTimer = () => {
     setShowTimerIntro(false);
     setTimerStarted(true);
+  };
+
+  const handleBackClick = () => {
+    if (exercise?.hasTimer && timerStarted && !isAlreadyCompleted) {
+      setShowExitWarning(true);
+    } else {
+      navigate("/path");
+    }
+  };
+
+  const handleForcedExit = async () => {
+    const email = localStorage.getItem("vex_wizard_user");
+    if (email && exercise && !isAlreadyCompleted) {
+      try {
+        await supabase.from("progress").insert([{
+          email,
+          exercise_id: id,
+          score: 0,
+          attempts: mistakesCount + 1,
+          final_code: code,
+        }]);
+      } catch (err) {
+        console.error("Error saving forced exit", err);
+      }
+    }
+    navigate("/path");
   };
 
   const handleEditorPaste = (e: React.ClipboardEvent) => {
@@ -268,7 +295,7 @@ Devuelve un JSON con el siguiente formato estricto:
       {/* Top Bar */}
       <header className="flex items-center justify-between border-b border-white/10 bg-[var(--color-surface)] p-4">
         <button
-          onClick={() => navigate("/path")}
+          onClick={handleBackClick}
           className="rounded-full p-2 text-[var(--color-text-muted)] hover:bg-white/10 hover:text-white"
         >
           <ArrowLeft className="h-6 w-6" />
@@ -453,7 +480,7 @@ Devuelve un JSON con el siguiente formato estricto:
                     <img src="/Huo-Gold.png" alt="Huo Gold" referrerPolicy="no-referrer" className="h-full w-full object-contain drop-shadow-[0_0_40px_rgba(255,215,0,0.8)]" />
                   </div>
                   <h2 className="mb-2 text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600">
-                    ¡Terminaste el Bloque 1!
+                    ¡Completaste VEX Wizard!
                   </h2>
                   <h3 className="mb-4 text-2xl font-bold text-white">¡Felicidades!</h3>
                   <p className="mb-8 text-lg text-[var(--color-text-muted)]">
@@ -471,6 +498,48 @@ Devuelve un JSON con el siguiente formato estricto:
           </motion.div>
         )}
       </AnimatePresence>
+      {/* Exit Warning Modal (timed exercises only) */}
+      <AnimatePresence>
+        {showExitWarning && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              className="w-full max-w-sm"
+            >
+              <Card className="border-red-500 bg-[var(--color-surface)] shadow-[0_0_40px_rgba(239,68,68,0.3)]">
+                <CardContent className="flex flex-col items-center p-8 text-center">
+                  <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-500/10 border-2 border-red-500">
+                    <Clock className="h-8 w-8 text-red-400" />
+                  </div>
+                  <h2 className="mb-2 text-2xl font-bold text-white">¿Seguro que quieres salir?</h2>
+                  <p className="mb-8 text-[var(--color-text-muted)]">
+                    Si sales ahora, <strong className="text-red-400">no podrás regresar</strong> a este ejercicio y se registrarán <strong className="text-red-400">0 puntos</strong>.
+                  </p>
+                  <div className="flex flex-col gap-3 w-full">
+                    <Button className="w-full" size="lg" onClick={() => setShowExitWarning(false)}>
+                      Quedarse
+                    </Button>
+                    <button
+                      onClick={handleForcedExit}
+                      className="w-full text-sm text-red-400 hover:text-red-300 underline transition-colors"
+                    >
+                      Salir y enviar (0 pts)
+                    </button>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Timer Intro Modal */}
       <AnimatePresence>
         {showTimerIntro && (
